@@ -16,8 +16,12 @@ include_directories(.)
 link_directories( ${CMAKE_SOURCE_DIR}/lib )
 
 # Create library
-set( utils_srcs src/mesh2pcd.cpp )
-set( utils_hdrs src/getBoundingBox.h src/getBoundingBox.hpp src/mesh2pcd.h )
+set( utils_srcs src/mesh2pcd.cpp
+  src/voxelRepresentation.cpp )
+set( utils_hdrs src/getBoundingBox.h 
+  src/getBoundingBox.hpp 
+  src/mesh2pcd.h 
+  src/voxelRepresentation.h )
 
 add_library( pcl_progs ${utils_srcs} ${utils_hdrs} )
 target_link_libraries( pcl_progs ${PCL_LIBRARIES} )
@@ -31,3 +35,16 @@ add_executable( testMesh2PCD tests/testMesh2PCD.cpp )
 target_link_libraries( testMesh2PCD pcl_progs ${PCL_LIBRARIES} )
 set_target_properties( testMesh2PCD PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
+
+add_executable( testVoxelRep tests/testVoxelRep.cpp )
+target_link_libraries( testVoxelRep pcl_progs ${PCL_LIBRARIES} )
+set_target_properties( testVoxelRep PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
+
+add_executable( testTransformPCD tests/testTransformPCD.cpp )
+target_link_libraries( testTransformPCD ${PCL_LIBRARIES} )
+set_target_properties( testTransformPCD PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
+
+
+add_executable( octree_viewer src/octree_viewer.cpp )
+target_link_libraries( octree_viewer ${PCL_LIBRARIES} )
+set_target_properties( octree_viewer PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
