@@ -54,6 +54,17 @@ void getBoundingBox( const boost::shared_ptr< pcl::PointCloud<PointType> > &_inp
   double bx = maxP.x - minP.x;
   double by = maxP.y - minP.y;
   double bz = maxP.z - minP.z;
+
+  //-- Center of 6 box's faces
+  Eigen::VectorXf bc[6];
+  bc[0] = tfFinal + eigDx.col(0)*bx / 2.0;
+  bc[1] = tfFinal - eigDx.col(0)*bx / 2.0;
+  bc[2] = tfFinal + eigDx.col(1)*by / 2.0;
+  bc[3] = tfFinal - eigDx.col(1)*by / 2.0;
+  bc[4] = tfFinal + eigDx.col(2)*bz / 2.0;
+  bc[5] = tfFinal - eigDx.col(2)*bz / 2.0;
+
+
   //-- Print info
   std::cout << " * Centroid: "<< centroid.head(3).transpose() << std::endl;
   std::cout << " * Dimensions: "<<bx<< ", "<<by<<", "<<bz<< std::endl; 
@@ -63,7 +74,17 @@ void getBoundingBox( const boost::shared_ptr< pcl::PointCloud<PointType> > &_inp
   pcl::visualization::PCLVisualizer viewer;
   viewer.addPointCloud( _input );
   viewer.addCube( tfFinal, qfinal, bx, by, bz );
-  viewer.addCoordinateSystem(1.0);
+
+  // Add center of box faces
+  for( int i = 0; i < 6; ++i ) {
+      pcl::PointXYZ p; 
+      p.x = bc[i](0); p.y = bc[i](1); p.z = bc[i](2);
+      char name[30];
+      sprintf( name, "sphere%d", i );
+      viewer.addSphere( p, 0.02, 1.0, 0.0, 0.0, name );
+  }
+
+  //viewer.addCoordinateSystem(1.0);
   viewer.spin();
 
   return;
